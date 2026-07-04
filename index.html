@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slona — Product Catalog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand:#EFE3CE;
+    --card:#FFFCF5;
+    --ink:#2B241C;
+    --ink-soft:#6b5f4f;
+    --teal:#1E6B6E;
+    --rust:#C1622D;
+    --gold:#B98A2E;
+    --line:#DCCBA6;
+    --sale:#B23A3A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--sand);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Header ---------- */
+  header.hero{
+    padding:56px 24px 40px;
+    text-align:center;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(193,98,45,0.08), transparent 40%),
+      radial-gradient(circle at 85% 10%, rgba(30,107,110,0.10), transparent 45%);
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--teal);
+    margin-bottom:14px;
+  }
+  h1.brand{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(40px,7vw,72px);
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  h1.brand em{
+    font-style:italic;
+    font-weight:400;
+    color:var(--rust);
+  }
+  .tagline{
+    font-size:16px;
+    color:var(--ink-soft);
+    max-width:480px;
+    margin:0 auto;
+  }
+
+  /* ---------- Sticky nav ---------- */
+  nav.catnav{
+    position:sticky;top:0;z-index:20;
+    background:rgba(239,227,206,0.94);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.catnav .wrap{
+    display:flex;gap:6px;overflow-x:auto;
+    padding:12px 24px;
+  }
+  nav.catnav a{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    color:var(--ink);
+    text-decoration:none;
+    padding:8px 14px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:var(--card);
+    transition:all .15s ease;
+  }
+  nav.catnav a:hover{border-color:var(--rust);color:var(--rust);}
+
+  /* ---------- Section shell ---------- */
+  section.block{padding:56px 0 8px;}
+  .block-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:16px;margin-bottom:28px;border-bottom:2px solid var(--ink);
+    padding-bottom:14px;
+  }
+  .block-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;font-size:clamp(26px,4vw,36px);
+    margin:0;
+  }
+  .block-head .count{
+    font-family:'Space Mono', monospace;
+    font-size:12px;color:var(--ink-soft);
+  }
+  .block-note{
+    margin:-18px 0 26px;
+    color:var(--ink-soft);
+    font-size:14px;
+    max-width:640px;
+  }
+
+  section.feature .block-head{border-bottom-color:var(--rust);}
+  section.feature.summer .block-head{border-bottom-color:var(--teal);}
+  section.feature.sale .block-head{border-bottom-color:var(--sale);}
+
+  /* ---------- Grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+    gap:26px;
+    padding-bottom:12px;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:2px;
+    position:relative;
+    display:flex;flex-direction:column;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 28px -18px rgba(43,36,28,0.45);}
+  .card .thumb{
+    position:relative;
+    aspect-ratio:1/1;
+    overflow:hidden;
+    border-bottom:1px dashed var(--line);
+  }
+  .card .thumb img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .35s ease;
+  }
+  .card:hover .thumb img{transform:scale(1.045);}
+  .badges{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:6px;z-index:2;}
+  .badge{
+    font-family:'Space Mono', monospace;
+    font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    padding:4px 8px;border-radius:2px;color:#fff;
+  }
+  .badge.new{background:var(--teal);}
+  .badge.sale{background:var(--sale);}
+  .badge.summer{background:var(--rust);}
+  .badge.oos-badge{background:var(--ink-soft);}
+  .card.is-oos .thumb img{filter:grayscale(0.55);opacity:.6;}
+  .card.is-oos .price-row{opacity:.5;}
+
+  .card .info{padding:16px 16px 18px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .card .cat-tag{
+    font-family:'Space Mono', monospace;
+    font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .card h3{
+    font-family:'Fraunces', serif;font-weight:600;
+    font-size:19px;margin:0;line-height:1.25;
+  }
+  .card .desc{font-size:13px;color:var(--ink-soft);line-height:1.4;margin:0;}
+
+  .price-row{
+    margin-top:auto;padding-top:8px;
+    display:flex;align-items:baseline;gap:9px;
+  }
+  .price{font-family:'Space Mono', monospace;font-weight:700;font-size:16px;}
+  .price.was{
+    font-weight:400;color:var(--ink-soft);
+    text-decoration:line-through;font-size:13px;
+  }
+  .price.now{color:var(--sale);}
+
+  /* swatches */
+  .swatches{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px;}
+  .swatch{
+    position:relative;width:20px;height:20px;border-radius:50%;
+    border:1px solid rgba(0,0,0,0.18);
+    cursor:default;
+  }
+  .swatch.oos{opacity:.45;}
+  .swatch.oos::after{
+    content:'';position:absolute;inset:-1px;
+    background:linear-gradient(to top right, transparent 47%, #6b5f4f 48%, #6b5f4f 52%, transparent 53%);
+    border-radius:50%;
+  }
+  .swatch[data-name]:hover::before{
+    content:attr(data-name);
+    position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;font-size:10px;font-family:'Space Mono',monospace;
+    padding:3px 7px;border-radius:3px;white-space:nowrap;z-index:5;
+  }
+  .swatch-thumb{
+    width:26px;height:26px;border-radius:50%;overflow:hidden;
+    border:1px solid rgba(0,0,0,0.18);position:relative;
+  }
+  .swatch-thumb img{width:100%;height:100%;object-fit:cover;}
+  .swatch-thumb.oos img{filter:grayscale(1);opacity:.5;}
+  .swatch-thumb.oos::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(to top right, transparent 47%, #2B241C 48%, #2B241C 52%, transparent 53%);
+  }
+  .oos-note{
+    font-family:'Space Mono', monospace;font-size:9.5px;color:var(--ink-soft);
+    margin-top:2px;
+  }
+
+  footer{
+    padding:50px 24px 60px;text-align:center;
+    color:var(--ink-soft);font-size:13px;
+    border-top:1px solid var(--line);margin-top:40px;
+  }
+  footer .mark{
+    font-family:'Fraunces', serif;font-style:italic;font-size:18px;color:var(--ink);
+    margin-bottom:6px;
+  }
+
+  @media (max-width:520px){
+    .grid{grid-template-columns:repeat(auto-fill, minmax(150px,1fr));gap:16px;}
+    section.block{padding:40px 0 4px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Handmade goods · Everyday occasions</div>
+  <h1 class="brand"><em>Slona</em></h1>
+  <p class="tagline">Woven bags and hats, leather essentials, and tableware for the table and the shoreline alike.</p>
+</header>
+
+<nav class="catnav">
+  <div class="wrap">
+    <a href="#new-arrivals">New Arrivals</a>
+    <a href="#hot-summer">Hot Summer Collection</a>
+    <a href="#sale">Sale</a>
+    <a href="#bags">Bags &amp; Totes</a>
+    <a href="#hats">Hats &amp; Sun Accessories</a>
+    <a href="#kids">Kids' Accessories</a>
+    <a href="#towels">Beach Towels</a>
+    <a href="#baskets">Baskets &amp; Trays</a>
+    <a href="#tableware">Home &amp; Tableware</a>
+    <a href="#glassware">Glassware &amp; Entertaining</a>
+  </div>
+</nav>
+
+<main class="wrap" id="app"></main>
+
+<footer>
+  <div class="mark">Slona</div>
+  Prices shown in USD. Colors may vary slightly from photos.
+</footer>
+
+<script>
+const PRODUCTS = [
+  {
+    id:'p1', name:'Seaside Lace Shoulder Bag', category:'bags',
+    img:'images/p1-shoulder-bag.png', price:58, sale:null,
+    desc:'Hand-crocheted cotton lace with a knotted top handle and hidden zip.',
+    tags:['new']
+  },
+  {
+    id:'p2', name:'Sundrift Crochet Hobo', category:'bags',
+    img:'images/p2-hobo-bag.png', price:64, sale:47,
+    desc:'Slouchy crochet hobo silhouette with an adjustable buckled strap.',
+    tags:['sale']
+  },
+  {
+    id:'p3', name:'Coastal Stripe Tote &amp; Hat Set', category:'hats',
+    img:'images/p3-set-tan.png', price:79, sale:null,
+    desc:'Matching woven tote and wide-brim hat, in five colorways.',
+    tags:['summer'],
+    colors:[
+      {name:'Tan Horizon', img:'images/p3-set-tan.png'},
+      {name:'Mustard Noir', img:'images/p3-set-mustard.png'},
+      {name:'Olive Whisper', img:'images/p3-set-olive.png'},
+      {name:'Cream Onyx', img:'images/p3-set-cream-black.png'},
+      {name:'Jet Stripe', img:'images/p3-set-noir.png', oos:true}
+    ]
+  },
+  {
+    id:'p4', name:'Dune Ombre Cowboy Hat', category:'hats',
+    img:'images/p4-cowboy-hat.png', price:42, sale:null,
+    desc:'Ombre-woven straw hat finished with a beaded charm trim and chin cord.',
+    tags:['new']
+  },
+  {
+    id:'p5', name:'Golden Clasp Woven Clutch', category:'bags',
+    img:'images/p5-clutch-group.png', price:46, sale:null,
+    desc:'Structured woven clutch with a gold clasp and detachable chain strap.',
+    tags:['summer'],
+    colors:[
+      {name:'Natural Tan', hex:'#C9A876'},
+      {name:'Onyx Black', hex:'#1a1a1a'},
+      {name:'Fuchsia Pink', hex:'#d6317a', oos:true},
+      {name:'Cream White', hex:'#f2ead9'}
+    ]
+  },
+  {
+    id:'p6', name:'Carnival Stripe Crossbody', category:'bags',
+    img:'images/p6-crossbody.png', price:54, sale:39,
+    desc:'Multicolor woven crossbody on a polished gold chain strap.',
+    tags:['sale','summer']
+  },
+  {
+    id:'p7', name:'Riviera Cotton Beach Towel', category:'towels',
+    img:'images/p7-towels.png', price:28, sale:22,
+    desc:'Soft Turkish cotton towel with fringed edges, in eight sun-washed colors.',
+    tags:['sale','new'],
+    colors:[
+      {name:'Grey', hex:'#9aa5ad'},
+      {name:'Vanilla', hex:'#d8c9a3'},
+      {name:'Mint', hex:'#a9d8c5'},
+      {name:'Green', hex:'#1f8f6d'},
+      {name:'Yellow', hex:'#f4c22b', oos:true},
+      {name:'Blue', hex:'#2f7fd1'},
+      {name:'Raspberry', hex:'#b02257'},
+      {name:'Peach', hex:'#e8b393'}
+    ]
+  },
+  {
+    id:'p8', name:'The Elara Handbag', category:'bags',
+    img:'images/elara-taupe.png', price:89, sale:null,
+    desc:'Structured pebbled-leather handbag with dual top handles and a removable strap.',
+    tags:['new'],
+    colors:[
+      {name:'Warm Taupe', img:'images/elara-taupe.png'},
+      {name:'Merlot', img:'images/elara-burgundy.png', oos:true},
+      {name:'Olive', img:'images/elara-olive.png'}
+    ]
+  },
+  {
+    id:'p9', name:'Beachcomber Woven Tote &amp; Hat Set', category:'hats',
+    img:'images/beach-set-classic.png', price:36, sale:null,
+    desc:'Paper-straw tote and sun hat set with leather trim, in four woven styles.',
+    tags:['summer'],
+    colors:[
+      {name:'Classic Two-Tone', img:'images/beach-set-classic.png'},
+      {name:'Beaded Trim', img:'images/beach-set-beaded.png'},
+      {name:'Zebra Trim', img:'images/beach-set-zebra.png'},
+      {name:'Navy Stripe', img:'images/beach-set-navy.png'},
+      {name:'Wheat Two-Tone', img:'images/beach-set-wheat.png'},
+      {name:'Natural Cream', img:'images/beach-set-natural.png'}
+    ]
+  },
+  {
+    id:'p10', name:'Fringed Raffia Sun Hat', category:'hats',
+    img:'images/fringed-raffia-hats.png', price:16, sale:12,
+    desc:'Wide-brim raffia hat with a hand-tied fringe edge and drawstring tie.',
+    tags:['sale','summer']
+  },
+  {
+    id:'p11', name:'Holly Berry Cake Stand', category:'tableware',
+    img:'images/holly-cake-stand.png', price:34, sale:null,
+    desc:'Hand-painted ceramic cake stand with a raised holly and berry motif.',
+    tags:['new']
+  },
+  {
+    id:'p12', name:'Holly Berry Teacup &amp; Saucer', category:'tableware',
+    img:'images/holly-teacup.png', price:22, sale:null,
+    desc:'Ceramic teacup and saucer set to match the Holly Berry cake stand.',
+    tags:[]
+  },
+  {
+    id:'p13', name:'Strawberry Split Dish', category:'tableware',
+    img:'images/strawberry-dish.png', price:26, sale:null,
+    desc:'Glazed ceramic double dish shaped like a split strawberry, for snacks or dips.',
+    tags:[], oos:true
+  },
+  {
+    id:'p14', name:'Peppermint Twist Dish', category:'tableware',
+    img:'images/peppermint-dish.png', price:28, sale:null,
+    desc:'Hand-painted candy-shaped ceramic dish with a glossy red and white stripe.',
+    tags:['new']
+  },
+  {
+    id:'p15', name:'Ombre Stoneware Mug', category:'tableware',
+    img:'images/ombre-mug.png', price:18, sale:null,
+    desc:'Reactive-glaze stoneware mug, fading from soft grey to deep charcoal.',
+    tags:[],
+    colors:[
+      {name:'Grey Fade', img:'images/ombre-mug.png'},
+      {name:'Sunset Orange', img:'images/ombre-mug-orange.png'},
+      {name:'Blush Fade', img:'images/ombre-mug-blush.png'}
+    ]
+  },
+  {
+    id:'p16', name:'Scalloped Crystal Bowl', category:'glassware',
+    img:'images/crystal-bowl-nuts.png', price:32, sale:24,
+    desc:'Pressed-glass scalloped bowl for nuts, sweets, or chocolates.',
+    tags:['sale']
+  },
+  {
+    id:'p17', name:'Crystal Trophy Pedestal Bowl', category:'glassware',
+    img:'images/crystal-trophy-bowl.png', price:58, sale:null,
+    desc:'Tall cut-glass pedestal bowl for serving snacks at the center of the table.',
+    tags:['new']
+  },
+  {
+    id:'p18', name:'Crystal Dessert Coupe', category:'glassware',
+    img:'images/crystal-coupe.png', price:19, sale:null,
+    desc:'Diamond-cut glass coupe on a short stem, perfect for ice cream or trifle.',
+    tags:['summer']
+  },
+  {
+    id:'p19', name:'Aurora Hobeau Bag', category:'bags',
+    img:'images/aurora-grey.png', price:76, sale:null,
+    desc:'Pleated quilted-leather hobo with a rolled top handle and clip-on strap.',
+    tags:['new'],
+    colors:[
+      {name:'Warm Grey', img:'images/aurora-grey.png'},
+      {name:'Blush Beige', img:'images/aurora-beige.png'},
+      {name:'Merlot', img:'images/aurora-burgundy.png'},
+      {name:'Camel', img:'images/aurora-camel.png', oos:true}
+    ]
+  },
+  {
+    id:'p20', name:'Ivory Crochet Flower Hobo', category:'bags',
+    img:'images/ivory-crochet-hobo.png', price:54, sale:null,
+    desc:'Hand-crocheted floral medallion hobo bag with twisted rope handles.',
+    tags:['summer']
+  },
+  {
+    id:'p21', name:'Lace Petal Sun Hat, Kids', category:'kids',
+    img:'images/kids-hats-flatlay.png', price:14, sale:null,
+    desc:'Eyelet-lace bucket hat with a scalloped brim and embroidered flower, for little ones.',
+    tags:['new'],
+    colors:[
+      {name:'White', hex:'#f7f3ea'},
+      {name:'Pink', hex:'#f2b9c4'},
+      {name:'Yellow', hex:'#f5e39a'},
+      {name:'Coral', hex:'#e8746b'},
+      {name:'Lavender', hex:'#cdb8e0', oos:true}
+    ]
+  },
+  {
+    id:'p22', name:'Two-Tone Rattan Nesting Trays', category:'baskets',
+    img:'images/rattan-round.png', price:44, sale:34,
+    desc:'Hand-woven rattan serving trays with looped handles, nesting set of three.',
+    tags:['sale'],
+    colors:[
+      {name:'Round', img:'images/rattan-round.png'},
+      {name:'Rectangular', img:'images/rattan-rect.png'},
+      {name:'Oval', img:'images/rattan-oval.png'}
+    ]
+  },
+  {
+    id:'p23', name:'Marble-Inset Bamboo Nesting Trays', category:'baskets',
+    img:'images/bamboo-marble-oval.png', price:27, sale:null,
+    desc:'Bamboo-framed serving trays with a faux-marble insert, set of three.',
+    tags:[],
+    colors:[
+      {name:'Oval, Black Marble', img:'images/bamboo-marble-oval.png'},
+      {name:'Square, White Marble', img:'images/bamboo-marble-square.png', oos:true}
+    ]
+  },
+  {
+    id:'p24', name:'Bamboo Snack Tray Set', category:'baskets',
+    img:'images/bamboo-hexagon-tray.png', price:16, sale:12,
+    desc:'Compartmented bamboo tray with a sliding lid, for nuts, dried fruit, and snacks.',
+    tags:['sale'],
+    colors:[
+      {name:'Hexagon, 4-Compartment', img:'images/bamboo-hexagon-tray.png'},
+      {name:'Clover, 5-Compartment', img:'images/bamboo-clover-tray.png'},
+      {name:'Square, 4-Compartment', img:'images/bamboo-square-tray.png'}
+    ]
+  },
+  {
+    id:'p25', name:'Bamboo Cheese Board &amp; Knife Set', category:'baskets',
+    img:'images/cheese-board-3knife.png', price:23, sale:null,
+    desc:'Curved bamboo serving board with stainless cheese knives tucked into the handle.',
+    tags:[],
+    colors:[
+      {name:'3-Knife Set', img:'images/cheese-board-3knife.png'},
+      {name:'2-Knife Set', img:'images/cheese-board-2knife.png'}
+    ]
+  },
+  {
+    id:'p26', name:'Moroccan Pattern Pitcher &amp; Mug Set', category:'glassware',
+    img:'images/moroccan-set-clear.png', price:52, sale:null,
+    desc:'Embossed glass pitcher with six matching mugs, in four colorways.',
+    tags:['new'],
+    colors:[
+      {name:'Clear', img:'images/moroccan-set-clear.png'},
+      {name:'Teal', img:'images/moroccan-set-teal.png'},
+      {name:'Amber', img:'images/moroccan-set-amber.png'},
+      {name:'Blush', img:'images/moroccan-set-blush.png'}
+    ]
+  },
+  {
+    id:'p27', name:'Ribbed Glass Carafe &amp; Tumbler', category:'glassware',
+    img:'images/ribbed-carafe-smoke.png', price:22, sale:null,
+    desc:'Fluted glass carafe with a cork stopper and matching tumbler.',
+    tags:[]
+  },
+  {
+    id:'p28', name:'Ribbed Tall Tumbler Set &amp; Carafe', category:'glassware',
+    img:'images/ribbed-tumbler-set.png', price:38, sale:null,
+    desc:'Six gold-rimmed ribbed tumblers with a matching cork-stoppered carafe.',
+    tags:['summer']
+  },
+  {
+    id:'p29', name:'Scalloped Glass Bowl &amp; Saucer', category:'glassware',
+    img:'images/scalloped-bowl-clear.png', price:24, sale:null,
+    desc:'Petal-edged pressed-glass bowl on a matching scalloped saucer.',
+    tags:[],
+    colors:[
+      {name:'Clear', img:'images/scalloped-bowl-clear.png'},
+      {name:'Amber', img:'images/scalloped-bowl-amber.png'}
+    ]
+  },
+  {
+    id:'p30', name:'Ribbed Glass Teacup &amp; Saucer', category:'glassware',
+    img:'images/teacup-saucer-clear.png', price:16, sale:12,
+    desc:'Fluted glass teacup and saucer, in three tinted finishes.',
+    tags:['sale'],
+    colors:[
+      {name:'Clear', img:'images/teacup-saucer-clear.png'},
+      {name:'Amber', img:'images/teacup-saucer-amber.png'},
+      {name:'Smoke', img:'images/teacup-saucer-smoke.png'}
+    ]
+  },
+  {
+    id:'p31', name:'Lidded Sugar Bowl', category:'glassware',
+    img:'images/sugar-bowl-brass.png', price:19, sale:null,
+    desc:'Metal sugar bowl with a hinged lid and matching spoon.',
+    tags:[],
+    colors:[
+      {name:'Brass', img:'images/sugar-bowl-brass.png'},
+      {name:'Stainless', img:'images/sugar-bowl-steel.png'}
+    ]
+  },
+  {
+    id:'p32', name:'Orb-Handle Ceramic Cake Stand &amp; Bowl', category:'tableware',
+    img:'images/ceramic-cake-stand.png', price:38, sale:null,
+    desc:'Ceramic stand with turned wood ball handles and a solid wood base.',
+    tags:['new'],
+    colors:[
+      {name:'Cake Stand', img:'images/ceramic-cake-stand.png'},
+      {name:'Serving Bowl', img:'images/ceramic-serving-bowl.png'}
+    ]
+  },
+  {
+    id:'p33', name:'Ribbed Ceramic Latte Mug', category:'tableware',
+    img:'images/latte-mug-cream.png', price:15, sale:11,
+    desc:'Fluted stoneware mug for lattes and everyday coffee.',
+    tags:['sale'],
+    colors:[
+      {name:'Cream', img:'images/latte-mug-cream.png'},
+      {name:'Grey', img:'images/latte-mug-grey.png'},
+      {name:'Blush', img:'images/latte-mug-blush.png'}
+    ]
+  },
+  {
+    id:'p34', name:'Clear Lace-Trim Tablecloth', category:'tableware',
+    img:'images/pvc-tablecloth.png', price:24, sale:null,
+    desc:'Wipeable clear PVC tablecloth with an embroidered lace border.',
+    tags:[]
+  }
+];
+
+const CATS = {
+  bags:'Bags & Totes',
+  hats:'Hats & Sun Accessories',
+  kids:'Kids\' Accessories',
+  towels:'Beach Towels',
+  baskets:'Baskets & Trays',
+  tableware:'Home & Tableware',
+  glassware:'Glassware & Entertaining'
+};
+
+function swatchesHtml(p){
+  if(!p.colors) return '';
+  const chips = p.colors.map(c=>{
+    if(c.img){
+      return `<div class="swatch-thumb ${c.oos?'oos':''}" title="${c.name}${c.oos?' — Out of stock':''}"><img src="${c.img}" alt="${c.name}"></div>`;
+    }
+    return `<div class="swatch ${c.oos?'oos':''}" style="background:${c.hex}" data-name="${c.name}${c.oos?' — Out of stock':''}"></div>`;
+  }).join('');
+  const oosCount = p.colors.filter(c=>c.oos).length;
+  return `<div class="swatches">${chips}</div>${oosCount?`<div class="oos-note">${p.colors.find(c=>c.oos).name} — out of stock</div>`:''}`;
+}
+
+function badgesHtml(p, context){
+  const b = [];
+  if(p.oos) b.push('<span class="badge oos-badge">Out of Stock</span>');
+  if(context!=='new' && p.tags.includes('new')) b.push('<span class="badge new">New</span>');
+  if(context!=='sale' && p.sale) b.push('<span class="badge sale">Sale</span>');
+  if(context!=='summer' && p.tags.includes('summer')) b.push('<span class="badge summer">Summer</span>');
+  if(context==='sale') b.push('<span class="badge sale">Sale</span>');
+  if(context==='new') b.push('<span class="badge new">New</span>');
+  if(context==='summer') b.push('<span class="badge summer">Summer</span>');
+  return `<div class="badges">${b.join('')}</div>`;
+}
+
+function cardHtml(p, context){
+  const priceHtml = p.sale
+    ? `<span class="price was">$${p.price}</span><span class="price now">$${p.sale}</span>`
+    : `<span class="price">$${p.price}</span>`;
+  return `
+  <article class="card ${p.oos?'is-oos':''}">
+    <div class="thumb">
+      ${badgesHtml(p, context)}
+      <img src="${p.img}" alt="${p.name}" loading="lazy">
+    </div>
+    <div class="info">
+      <span class="cat-tag">${CATS[p.category]}</span>
+      <h3>${p.name}</h3>
+      <p class="desc">${p.desc}</p>
+      ${swatchesHtml(p)}
+      <div class="price-row">${priceHtml}</div>
+    </div>
+  </article>`;
+}
+
+function section({id, title, note, items, context, cls}){
+  return `
+  <section class="block ${cls||''}" id="${id}">
+    <div class="block-head">
+      <h2>${title}</h2>
+      <span class="count">${items.length} item${items.length!==1?'s':''}</span>
+    </div>
+    ${note?`<p class="block-note">${note}</p>`:''}
+    <div class="grid">
+      ${items.map(p=>cardHtml(p, context)).join('')}
+    </div>
+  </section>`;
+}
+
+const newArrivals = PRODUCTS.filter(p=>p.tags.includes('new'));
+const hotSummer = PRODUCTS.filter(p=>p.tags.includes('summer'));
+const saleItems = PRODUCTS.filter(p=>p.sale);
+
+let html = '';
+html += section({
+  id:'new-arrivals', title:'New Arrivals',
+  note:'Fresh in this week, pulled from across the shop.',
+  items:newArrivals, context:'new', cls:'feature'
+});
+html += section({
+  id:'hot-summer', title:'Hot Summer Collection',
+  note:'Our warm-weather favorites, hand-picked from every category.',
+  items:hotSummer, context:'summer', cls:'feature summer'
+});
+html += section({
+  id:'sale', title:'Sale',
+  note:'Marked down for a limited time — these also live in their usual categories below.',
+  items:saleItems, context:'sale', cls:'feature sale'
+});
+
+Object.keys(CATS).forEach(catKey=>{
+  const items = PRODUCTS.filter(p=>p.category===catKey);
+  html += section({
+    id:catKey, title:CATS[catKey],
+    items, context:null
+  });
+});
+
+document.getElementById('app').innerHTML = html;
+</script>
+
+</body>
+</html>
